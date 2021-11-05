@@ -1,6 +1,7 @@
 import { FC } from "react";
 import styled from "styled-components";
-import { isPropertySignature } from "typescript";
+
+import { MealItemForm } from "./MealItemForm";
 
 const MealLi = styled.li`
     display: flex;
@@ -40,6 +41,9 @@ export const MealItem: FC<IMealItem> = (props) => {
             <h3>{props.name}</h3>
             <Description>{props.description}</Description>
             <Price>{price}</Price>
+        </div>
+        <div>
+            <MealItemForm/>
         </div>
     </MealLi>
 };
