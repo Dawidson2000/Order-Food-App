@@ -23,12 +23,16 @@ const MealForm = styled.form`
     }
 `;
 
-export const MealItemForm: FC = () => {
+export interface IMealItemForm {
+    id: string
+}
+
+export const MealItemForm: FC<IMealItemForm> = (props) => {
     return <MealForm>
         <Input 
             label = "Amount" 
             input = {{
-                id: 'amount',
+                id: 'amount' + props.id,
                 type: 'number',
                 min: '1',
                 max: '5',

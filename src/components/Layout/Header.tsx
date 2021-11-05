@@ -34,11 +34,15 @@ const MainImage = styled.div`
     }
 `;
 
-export const Header: FC = () => {
+export interface IHeader {
+    onCartVisible: () => void
+}
+
+export const Header: FC<IHeader> = (props) => {
     return <>
     <HeaderPage>
         <h1>ReactMeals</h1>
-        <HeaderCartButton>Cart</HeaderCartButton>
+        <HeaderCartButton onClick={props.onCartVisible} >Cart</HeaderCartButton>
     </HeaderPage>
     <MainImage>
         <img src={mealsImage}/>

@@ -1,5 +1,6 @@
 import { FC } from "react";
 import styled from "styled-components";
+import { isPropertySignature } from "typescript";
 
 import { CartIcon } from "../Cart/CartIcon";
 
@@ -45,8 +46,12 @@ const BadgeSpan = styled.span`
     }
 `;
 
-export const HeaderCartButton: FC = () => {
-    return <Button>
+export interface IHeaderCartButton {
+    onClick: () => void
+}
+
+export const HeaderCartButton: FC<IHeaderCartButton> = (props) => {
+    return <Button onClick={props.onClick}>
         <IconSpan><CartIcon/></IconSpan>
         <span>Your Cart</span>
         <BadgeSpan>3</BadgeSpan>

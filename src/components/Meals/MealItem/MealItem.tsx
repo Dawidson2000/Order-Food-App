@@ -27,6 +27,7 @@ const Price = styled.div`
 `;
 
 export interface IMealItem {
+    id: string
     name: string,
     description: string,
     price: number
@@ -43,7 +44,7 @@ export const MealItem: FC<IMealItem> = (props) => {
             <Price>{price}</Price>
         </div>
         <div>
-            <MealItemForm/>
+            <MealItemForm id={props.id}/>
         </div>
     </MealLi>
 };

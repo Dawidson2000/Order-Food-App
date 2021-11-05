@@ -1,12 +1,25 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { Header } from './components/Layout/Header';
 import { Meals } from './components/Meals/Meals';
+import { Cart } from './components/Cart/Cart';
 
 function App() {
+  const [isCartVisible, setIsCartVisible] = useState<boolean>(false);
+
+  const setCartVisible = () => {
+    setIsCartVisible(true);
+  }
+  
+  const setCartNonVisible = () => {
+    setIsCartVisible(false);
+  }
+
+
   return (
     <>
-      <Header />
+      {isCartVisible && <Cart onCartNonVisible={setCartNonVisible}/>}
+      <Header onCartVisible={setCartVisible} />
       <Meals />
     </>
   );
