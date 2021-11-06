@@ -62,9 +62,13 @@ export const Cart: FC<ICart> = (props) => {
     const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
     const hasItems = cartContext.items.length > 0;
 
-    const cartItemAddHandler = (item: CartItem) => {};
+    const cartItemAddHandler = (item: CartItem) => {
+        cartContext.addItem({...item, amount: 1});
+    };
 
-    const cartItemRemoveHandler = (item: CartItem) => {};
+    const cartItemRemoveHandler = (item: CartItem) => {
+        cartContext.removeItem({...item, amount: 1});
+    };
 
     const cartItems = <CartUl>{cartContext.items.map(item => {
         return <CartItemElement

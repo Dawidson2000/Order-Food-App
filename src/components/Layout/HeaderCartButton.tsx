@@ -1,11 +1,15 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { CartContext } from "../../store/cart-context";
 
 
 import { CartIcon } from "../Cart/CartIcon";
 
-const Button = styled.button`
+export interface IButton {
+    onItemChange: boolean
+}
+
+const Button = styled.button<IButton>`
     cursor: pointer;
     font: inherit;
     border: none;
@@ -17,6 +21,25 @@ const Button = styled.button`
     align-items: center;
     border-radius: 25px;
     font-weight: bold;
+    animation: ${props => props.onItemChange ? 'bump 300ms ease-out' : 'none'};
+
+    @keyframes bump {
+        0% {
+            transform: scale(1);
+        }
+        10% {
+            transform: scale(0.9);
+        }
+        30% {
+            transform: scale(1.1);
+        }
+        50% {
+            transform: scale(1.15);
+        }
+        100% {
+            transform: scale(1);
+        }
+}
 
     &:hover,
     &:active {
@@ -52,13 +75,27 @@ export interface IHeaderCartButton {
 }
 
 export const HeaderCartButton: FC<IHeaderCartButton> = (props) => {
+    const [isButtonHighlighted, setIsButtonHighlighted] = useState<boolean>(false);
+
     const cartContext = useContext(CartContext);
+
+    useEffect(() => {
+        setIsButtonHighlighted(true);
+
+        const timer = setTimeout(() => {
+            setIsButtonHighlighted(false); 
+        }, 300);
+
+        return () => {
+            clearTimeout(timer);
+        };
+    },[cartContext.totalAmount]);
 
     const numberOfCartItems = cartContext.items.reduce((curNumber: number, item: any) => {
         return curNumber + item.amount
     }, 0);
 
-    return <Button onClick={props.onClick}>
+    return <Button onItemChange={isButtonHighlighted} onClick={props.onClick}>
         <IconSpan><CartIcon/></IconSpan>
         <span>Your Cart</span>
         <BadgeSpan>{numberOfCartItems}</BadgeSpan>
