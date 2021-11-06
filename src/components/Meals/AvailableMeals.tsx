@@ -53,6 +53,12 @@ const DUMMY_MEALS = [
         description: 'Healthy...and green...',
         price: 18.99,
     },
+    {
+        id: 'm5',
+        name: 'Barszyk',
+        description: 'Dobry taki z uszkami',
+        price: 10.00,
+    },
 ];
 
 export const AvailableMeals: FC = () => {

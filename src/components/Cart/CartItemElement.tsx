@@ -75,11 +75,13 @@ export interface ICartItem {
 }
 
 export const CartItemElement: FC<ICartItem> = (props) => {
+    const price = `$${props.price.toFixed(2)}`;
+
     return <CartLi>
         <div>
             <h2>{props.name}</h2>
             <Summary>
-                <Price>{props.price}</Price>
+                <Price>{price}</Price>
                 <Amount>{props.amount}</Amount>
             </Summary>
         </div>

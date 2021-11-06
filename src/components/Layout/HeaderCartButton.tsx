@@ -39,7 +39,7 @@ const Button = styled.button<IButton>`
         100% {
             transform: scale(1);
         }
-}
+    }   
 
     &:hover,
     &:active {
