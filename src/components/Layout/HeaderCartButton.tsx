@@ -1,6 +1,7 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import styled from "styled-components";
-import { isPropertySignature } from "typescript";
+import { CartContext } from "../../store/cart-context";
+
 
 import { CartIcon } from "../Cart/CartIcon";
 
@@ -51,9 +52,15 @@ export interface IHeaderCartButton {
 }
 
 export const HeaderCartButton: FC<IHeaderCartButton> = (props) => {
+    const cartContext = useContext(CartContext);
+
+    const numberOfCartItems = cartContext.items.reduce((curNumber: number, item: any) => {
+        return curNumber + item.amount
+    }, 0);
+
     return <Button onClick={props.onClick}>
         <IconSpan><CartIcon/></IconSpan>
         <span>Your Cart</span>
-        <BadgeSpan>3</BadgeSpan>
+        <BadgeSpan>{numberOfCartItems}</BadgeSpan>
     </Button>
 }
