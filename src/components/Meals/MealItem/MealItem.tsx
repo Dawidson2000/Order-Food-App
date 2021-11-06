@@ -1,7 +1,8 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import styled from "styled-components";
 
 import { MealItemForm } from "./MealItemForm";
+import { CartContext } from "../../../store/cart-context";
 
 const MealLi = styled.li`
     display: flex;
@@ -34,8 +35,18 @@ export interface IMealItem {
 }
 
 export const MealItem: FC<IMealItem> = (props) => {
-
     const price = `$${props.price.toFixed(2)}`;
+
+    const cartContext = useContext(CartContext);
+
+    const addToCartHandler = (amount: number) => {
+        cartContext.addItem({
+            id: props.id,
+            name: props.name,
+            price: props.price,
+            amount: amount
+        });
+    };
 
     return <MealLi>
         <div>
@@ -44,7 +55,7 @@ export const MealItem: FC<IMealItem> = (props) => {
             <Price>{price}</Price>
         </div>
         <div>
-            <MealItemForm id={props.id}/>
+            <MealItemForm id={props.id} onAddToCart={addToCartHandler}/>
         </div>
     </MealLi>
 };

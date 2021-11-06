@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC } from "react";
 import styled from "styled-components";
 
 const InputWrapper = styled.div`
@@ -21,6 +21,7 @@ const InputWrapper = styled.div`
 `;
 
 export interface IInput {
+    ref: any,
     label: string,
     input: {
         id: string,
@@ -32,9 +33,9 @@ export interface IInput {
     }
 }
 
-export const Input: FC<IInput> = (props) => {
+export const Input: FC<IInput> = React.forwardRef((props, ref: React.Ref<HTMLInputElement>) => {
     return <InputWrapper>
         <label htmlFor={props.input.id}>{props.label}</label>
-        <input {...props.input} />
+        <input ref={ref} {...props.input} />
     </InputWrapper>
-};
+});

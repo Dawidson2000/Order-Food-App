@@ -1,4 +1,4 @@
-import { FC } from "react";
+import React, { FC, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { Input } from "../../UI/Input";
@@ -24,12 +24,32 @@ const MealForm = styled.form`
 `;
 
 export interface IMealItemForm {
-    id: string
+    id: string,
+    onAddToCart: (amount: number) => void
 }
 
 export const MealItemForm: FC<IMealItemForm> = (props) => {
-    return <MealForm>
-        <Input 
+    const [amountIsValid, setAmountIsValid] = useState<boolean>(true);
+    
+    const amountInputRef = useRef<HTMLInputElement>();
+
+    const submitHandler = (event: React.SyntheticEvent) => {
+        event.preventDefault();
+
+        const enteredAmount = amountInputRef.current?.value as string;
+        const enteredAmountNumber = +enteredAmount;
+        
+        if(enteredAmount.trim().length === 0 || enteredAmountNumber < 1 || enteredAmountNumber > 5){
+            setAmountIsValid(false);
+            return;
+        }
+        props.onAddToCart(enteredAmountNumber);
+        setAmountIsValid(true);
+    };
+
+    return <MealForm onSubmit={submitHandler}>
+        <Input
+            ref={amountInputRef} 
             label = "Amount" 
             input = {{
                 id: 'amount' + props.id,
@@ -40,5 +60,6 @@ export const MealItemForm: FC<IMealItemForm> = (props) => {
                 defaultValue: '1'
             }}/>
         <button>+ Add</button>
+        {!amountIsValid && <p>Please enter valid amount (1-5).</p>}
     </MealForm>
 };

@@ -1,8 +1,10 @@
-import { FC } from "react";
+import { FC, useContext } from "react";
 import styled from "styled-components";
-import { isPropertySignature } from "typescript";
 
 import { Modal } from "../UI/Modal";
+import { CartContext } from "../../store/cart-context";
+import { CartItemElement } from "./CartItemElement";
+import { CartItem } from "../../store/CartProvider";
 
 const CartUl = styled.ul`
     list-style: none;
@@ -49,34 +51,40 @@ const Actions = styled.div`
     }
 `;
 
-const DUMMY_CART_ITEMS = [{
-    id: 'c1',
-    name: 'sushi',
-    amount: 2,
-    price: 12.99
-}]
 
 export interface ICart {
     onCartNonVisible: () => void
 }
 
 export const Cart: FC<ICart> = (props) => {
+    const cartContext = useContext(CartContext);
 
-    const cartItems = <CartUl>{DUMMY_CART_ITEMS.map(item => {
-        return <li>
-            {item.name}
-        </li>
+    const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
+    const hasItems = cartContext.items.length > 0;
+
+    const cartItemAddHandler = (item: CartItem) => {};
+
+    const cartItemRemoveHandler = (item: CartItem) => {};
+
+    const cartItems = <CartUl>{cartContext.items.map(item => {
+        return <CartItemElement
+            key={item.id}
+            name={item.name}
+            price={item.price}
+            amount={item.amount}
+            onAdd={cartItemAddHandler.bind(null, item)}
+            onRemove={cartItemRemoveHandler.bind(null, item)} />
     })}</CartUl>
 
     return <Modal onClick={props.onCartNonVisible} >
         {cartItems}
         <Total>
             <span>Total Amount</span>
-            <span>21.37</span>
+            <span>{totalAmount}</span>
         </Total>
         <Actions>
             <Button styleType='buttonAlt' onClick={props.onCartNonVisible}>Close</Button>
-            <Button styleType='button'>Order</Button>  
+            {hasItems && <Button styleType='button'>Order</Button>}
         </Actions>
     </Modal>
 };

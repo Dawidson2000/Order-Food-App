@@ -52,8 +52,8 @@ export const CartProvider: FC = props => {
     };
 
     const cartContext = {
-        items: [] as CartItem[],
-        totalAmount: 0,
+        items: cartState.items,
+        totalAmount: cartState.totalAmount,
         addItem: addItemToCartProvider,
         removeItem: removeItemFromCartHandler
     }
