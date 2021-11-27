@@ -1,10 +1,14 @@
-import { FC, useContext } from "react";
+import { FC, useContext, useState } from "react";
 import styled from "styled-components";
+import useHttp from "../../hooks/use-http";
 
 import { Modal } from "../UI/Modal";
 import { CartContext } from "../../store/cart-context";
 import { CartItemElement } from "./CartItemElement";
 import { CartItem } from "../../store/CartProvider";
+import { CheckoutForm } from "./CheckoutForm";
+import { CheckoutData } from "./CheckoutForm";
+import { LoadingScreen } from "../UI/LoadingScreen";
 
 const CartUl = styled.ul`
     list-style: none;
@@ -21,6 +25,10 @@ const Total = styled.div`
     font-weight: bold;
     font-size: 1.5rem;
     margin: 1rem 0;
+`;
+
+const Message = styled.p`
+    font-weight: 600;
 `;
 
 export interface IButton {
@@ -57,17 +65,22 @@ export interface ICart {
 }
 
 export const Cart: FC<ICart> = (props) => {
+    const [isCheckout, setIsCheckout] = useState<Boolean>(false);
+    const [isSubmitted, setIsSubmitted] = useState<Boolean>(false);
+
     const cartContext = useContext(CartContext);
+
+    const { error, isLoading, sendRequest: sendOrder } = useHttp();
 
     const totalAmount = `$${cartContext.totalAmount.toFixed(2)}`;
     const hasItems = cartContext.items.length > 0;
 
     const cartItemAddHandler = (item: CartItem) => {
-        cartContext.addItem({...item, amount: 1});
+        cartContext.addItem({ ...item, amount: 1 });
     };
 
     const cartItemRemoveHandler = (item: CartItem) => {
-        cartContext.removeItem({...item, amount: 1});
+        cartContext.removeItem({ ...item, amount: 1 });
     };
 
     const cartItems = <CartUl>{cartContext.items.map(item => {
@@ -80,15 +93,52 @@ export const Cart: FC<ICart> = (props) => {
             onRemove={cartItemRemoveHandler.bind(null, item)} />
     })}</CartUl>
 
-    return <Modal onClick={props.onCartNonVisible} >
+    const orderHandler = () => {
+        setIsCheckout(true);
+    };
+
+    const orderSubmitHandler = (checkoutData: CheckoutData) => {
+        console.log(cartContext.items[0].id);
+
+        const apllyOrder = () => {
+            setIsSubmitted(true);
+            cartContext.clearCart();
+        };
+
+        sendOrder({
+            url: 'https://react-dummy-http-72feb-default-rtdb.firebaseio.com/orders.json',
+            method: 'POST',
+            body: { userData: checkoutData, orderedMeals: cartContext.items, totalAmount: cartContext.totalAmount },
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }, apllyOrder)
+    };
+
+    let formContent: any = isCheckout && <CheckoutForm onClose={props.onCartNonVisible} onConfirm={orderSubmitHandler} />
+
+    if (error) {
+        formContent = <Message>Something gone wrong</Message>;
+    }
+
+    if (isLoading) {
+        formContent = <LoadingScreen />;
+    }
+
+    return <Modal onClick={props.onCartNonVisible}>
         {cartItems}
-        <Total>
-            <span>Total Amount</span>
-            <span>{totalAmount}</span>
-        </Total>
-        <Actions>
-            <Button styleType='buttonAlt' onClick={props.onCartNonVisible}>Close</Button>
-            {hasItems && <Button styleType='button'>Order</Button>}
-        </Actions>
+        {!isSubmitted ?
+            <>
+                <Total>
+                    <span>Total Amount</span>
+                    <span>{totalAmount}</span>
+                </Total>
+                <>{formContent}</>
+                <Actions>
+                    {!isCheckout && <Button styleType='buttonAlt' onClick={props.onCartNonVisible}>Close</Button>}
+                    {hasItems && !isCheckout && <Button styleType='button' onClick={orderHandler}>Order</Button>}
+                </Actions>
+            </>
+            : <Message>Thanks for your Order</Message>}
     </Modal>
 };

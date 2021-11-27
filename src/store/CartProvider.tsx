@@ -10,7 +10,8 @@ export type CartItem = {
 
 enum CartActionKind {
     ADD = 'ADD',
-    REMOVE = 'REMOVE'
+    REMOVE = 'REMOVE',
+    CLEAR = 'CLEAR'
 }
 
 interface CartState {
@@ -77,6 +78,13 @@ const CartReducer = (state: CartState,  action: CartAction) => {
         }
     }
 
+    if(action.type === CartActionKind.CLEAR){
+        return {
+            items: [],
+            totalAmount: 0
+         }
+    }
+
     return defaultCartState
 };
 
@@ -89,13 +97,18 @@ export const CartProvider: FC = props => {
 
     const removeItemFromCartHandler = (item: CartItem) => {
         cartDispatch({type: CartActionKind.REMOVE, item: item});
-    }; 
+    };
+    
+    const clearCartHandler = () => {
+        cartDispatch({type: CartActionKind.CLEAR, item: {} as CartItem});
+    };
 
     const cartContext = {
         items: cartState.items,
         totalAmount: cartState.totalAmount,
         addItem: addItemToCartProvider,
-        removeItem: removeItemFromCartHandler
+        removeItem: removeItemFromCartHandler,
+        clearCart: clearCartHandler
     }
 
     return <CartContext.Provider value={cartContext}>

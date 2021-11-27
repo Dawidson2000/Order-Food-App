@@ -24,6 +24,11 @@ const ModalDiv = styled.div`
     z-index: 30;
     animation: slide-down 300ms ease-out forwards;
 
+    & p {
+        width: 100%;
+        text-align: center;
+    }
+
     @keyframes slide-down {
         from {
             opacity: 0;
