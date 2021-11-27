@@ -31,7 +31,7 @@ export interface IMealItem {
     id: string
     name: string,
     description: string,
-    price: number
+    price: number,
 }
 
 export const MealItem: FC<IMealItem> = (props) => {
