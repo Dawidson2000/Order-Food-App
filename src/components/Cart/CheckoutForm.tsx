@@ -63,6 +63,8 @@ const Control = styled.div<IControl>`
     & p {
         color: red;
         margin: 3px;
+        text-align: left;
+        width: 100%;
     }
 `;
 

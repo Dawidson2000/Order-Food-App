@@ -65,25 +65,26 @@ export const AvailableMeals: FC = () => {
 
     }, [fetchMeals])
 
-    const mealsList = meals.map(meal =>
-        <MealItem
-            id={meal.id}
-            key={meal.id}
-            name={meal.name}
-            description={meal.description}
-            price={meal.price}
-        >
-            {meal.name}
-        </MealItem>)
+    const mealsList = meals.map(meal => {
+        if (Object.values(meal).every(Boolean)) {
+            return <MealItem
+                id={meal.id}
+                key={meal.id}
+                name={meal.name}
+                description={meal.description}
+                price={meal.price}
+            />
+        }
+    })
 
     let content: any = mealsList;
-    
-    if(error){
+
+    if (error) {
         content = <p>Something gone wrong</p>;
     }
 
-    if(isLoading){
-        content = <LoadingScreen/>;
+    if (isLoading) {
+        content = <LoadingScreen />;
     }
 
     return <Section>

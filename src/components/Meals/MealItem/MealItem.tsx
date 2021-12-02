@@ -34,8 +34,8 @@ export interface IMealItem {
     price: number,
 }
 
+
 export const MealItem: FC<IMealItem> = (props) => {
-    const price = `$${props.price.toFixed(2)}`;
 
     const cartContext = useContext(CartContext);
 
@@ -52,7 +52,7 @@ export const MealItem: FC<IMealItem> = (props) => {
         <div>
             <h3>{props.name}</h3>
             <Description>{props.description}</Description>
-            <Price>{price}</Price>
+            <Price>{props.price}</Price>
         </div>
         <div>
             <MealItemForm id={props.id} onAddToCart={addToCartHandler}/>
